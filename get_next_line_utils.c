@@ -6,98 +6,53 @@
 /*   By: aorynbay <@student.42abudhabi.ae>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 10:16:17 by aorynbay          #+#    #+#             */
-/*   Updated: 2024/07/15 15:03:57 by aorynbay         ###   ########.fr       */
+/*   Updated: 2024/07/15 22:32:26 by aorynbay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	find_newline(t_list *lst)
+char	*ft_strchr(const char *s, int c)
 {
-	int	i;
-	while (lst)
-	{
-		i = 0;
-		while (lst->str[i] && i < BUFFER_SIZE)
-		{
-			if (lst->str[i] == '\n')
-				return (1);
-			i++;
-		}
-		lst = lst->next;
-	}
-	return (0);
+	char	*str;
+	int		i;
+
+	str = (char *)s;
+	i = 0;
+	while (s[i] != '\0' && s[i] != (char)c)
+		i++;
+	if (s[i] == (char)c)
+		return (str + i);
+	return (NULL);
 }
 
-t_list	*find_last_node(t_list *list)
+size_t	ft_strlen(const char *s)
 {
-	if (NULL == list)
-		return (NULL);
-	while (list->next != NULL)
-		list = list->next;
-	return (list);
-}
+	size_t	count;
 
-void	ft_add(t_list **lst, char *new_str)
-{
-	t_list	*last;
-	t_list	*new;
-	
-	new = malloc(sizeof(t_list));
-	if (new == NULL)
-		return ;
-	if (*lst == NULL)
-	{
-		new->str = new_str;
-		new->next = NULL;
-		*lst = new;
-	}
-	else
-	{
-		last = find_last_node(*lst);
-		last->next = new;
-		new->str = new_str;
-		new->next = NULL;
-	}
-}
-
-int	len_of_line(t_list	*lst)
-{
-	int	count;
-	int	i;
-	
 	count = 0;
-	while (lst)
-	{
-		i = 0;
-		while (lst->str[i] != '\0' && lst->str[i] != '\n')
-		{
-			i++;
-			count++;
-			if (lst->str[i] == '\n')
-				return (count + 1);
-		}
-		lst = lst->next;
-	}
+	while (s[count] != '\0' && s[count] != '\n')
+		count++;
+	if (s[count] == '\n')
+		count++;
 	return (count);
 }
 
-void	put_line(t_list *lst, char *str)
+size_t	ft_strlcat(char *dst, const char *src, size_t dstsize)
 {
-	int	i;
-	int	j;
-	
-	j = 0;
-	while (lst)
-	{
-		i = 0;
-		while (lst->str[i] != '\0' && lst->str[i] != '\n')
-		{
-			str[j] = lst->str[i];
-			i++;
-			j++;
-		}
-		lst = lst->next;
-	}
-	str[j] = '\n';
+	size_t i;
+    size_t j;
+
+    i = 0;
+    while (dst[i] != '\0' && i < dstsize)
+        i++;
+    j = i;
+    while (src[i - j] != '\0' && i + 1 < dstsize)
+    {
+        dst[i] = src[i - j];
+        i++;
+    }
+    if (j < dstsize)
+        dst[i] = '\0';
+    return (j + ft_strlen(src));
 }

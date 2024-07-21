@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aorynbay <@student.42abudhabi.ae>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 10:16:17 by aorynbay          #+#    #+#             */
-/*   Updated: 2024/07/20 17:13:13 by aorynbay         ###   ########.fr       */
+/*   Updated: 2024/07/21 19:18:52 by aorynbay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 int	ft_strchr(const char *s, int c)
 {
@@ -59,24 +59,15 @@ char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*result;
 	int		i;
-	int		j;
 
 	i = 0;
-	j = 0;
 	result = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
-	if (result == NULL)
-	{
+	if (!result)
 		return (NULL);
-	}
-	while (s1[j] != '\0')
-	{
-		result[i++] = s1[j++];
-	}
-	j = 0;
-	while (s2[j] != '\0')
-	{
-		result[i++] = s2[j++];
-	}
+	while (*s1)
+		result[i++] = *s1++;
+	while (*s2)
+		result[i++] = *s2++;
 	result[i] = '\0';
 	return (result);
 }

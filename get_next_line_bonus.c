@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aorynbay <@student.42abudhabi.ae>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 10:14:17 by aorynbay          #+#    #+#             */
-/*   Updated: 2024/07/20 17:12:30 by aorynbay         ###   ########.fr       */
+/*   Updated: 2024/07/20 17:38:29 by aorynbay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 static char	*ft_strdup(const char *s1)
 {
@@ -64,15 +64,15 @@ static void	update_buf(char **buf)
 		i++;
 	if ((*buf)[i] == '\n')
 		i++;
-	temp = ft_strdup_nl(*buf + i);
+	temp = ft_strdup_nl((*buf) + i);
 	if (temp == NULL)
 	{
 		free(*buf);
-		*buf = NULL;
+		(*buf) = NULL;
 		return ;
 	}
 	free(*buf);
-	*buf = temp;
+	(*buf) = temp;
 }
 
 static void	reader(int fd, char **buf)
@@ -81,50 +81,50 @@ static void	reader(int fd, char **buf)
 	char	temp_buf[BUFFER_SIZE + 1];
 	char	*new_buf;
 
-	while (!ft_strchr(*buf, '\n'))
+	while (!ft_strchr(buf[fd], '\n'))
 	{
 		buf_count = read(fd, temp_buf, BUFFER_SIZE);
 		if (buf_count < 1)
 		{
 			if (buf_count == (-1))
 			{
-				if (*buf != NULL)
-					free(*buf);
-				*buf = NULL;
+				if (buf[fd] != NULL)
+					free(buf[fd]);
+				buf[fd] = NULL;
 			}
 			return ;
 		}
 		temp_buf[buf_count] = '\0';
-		new_buf = ft_strjoin(*buf, temp_buf);
+		new_buf = ft_strjoin(buf[fd], temp_buf);
 		if (new_buf == NULL)
-			return (free(*buf), *buf = NULL, (void)0);
-		free(*buf);
-		*buf = new_buf;
+			return (free(buf[fd]), buf[fd] = NULL, (void)0);
+		free(buf[fd]);
+		buf[fd] = new_buf;
 	}
 }
 
 char	*get_next_line(int fd)
 {
 	char			*result;
-	static char		*buf;
+	static char		*buf[1025];
 
 	if (fd < 0 || BUFFER_SIZE < 1 || BUFFER_SIZE > 2147483646)
 		return (NULL);
-	if (!buf)
-		buf = ft_strdup("");
-	if (buf == NULL)
-		return (free(buf), buf = NULL, NULL);
-	reader(fd, &buf);
-	if (buf == NULL || buf[0] == '\0')
+	if (!buf[fd])
+		buf[fd] = ft_strdup("");
+	if (buf[fd] == NULL)
+		return (free(buf[fd]), buf[fd] = NULL, NULL);
+	reader(fd, buf);
+	if (buf[fd] == NULL || buf[fd][0] == '\0')
 	{
-		if (buf && buf[0] == '\0')
-			(free(buf), buf = NULL);
+		if (buf[fd] && buf[fd][0] == '\0')
+			(free(buf[fd]), buf[fd] = NULL);
 		return (NULL);
 	}
-	result = ft_strdup(buf);
+	result = ft_strdup(buf[fd]);
 	if (result == NULL)
-		return (free(buf), buf = NULL, NULL);
-	update_buf(&buf);
+		return (free(buf[fd]), buf[fd] = NULL, NULL);
+	update_buf(&buf[fd]);
 	return (result);
 }
 
@@ -132,13 +132,11 @@ char	*get_next_line(int fd)
 // {
 // 	int fd = open("test.txt", O_RDONLY);
 // 	char *line = get_next_line(fd);
-// 	int i = 5;
-// 	while (line && i > 0)
+// 	while (line)
 // 	{
 // 		printf("|%s|\n", line);
 // 		free(line);
 // 		line = get_next_line(fd);
-// 		i--;
 // 	}
 // 	free(line);
 // 	// printf("|%s|\n", line);

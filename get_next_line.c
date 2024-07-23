@@ -6,7 +6,7 @@
 /*   By: aorynbay <@student.42abudhabi.ae>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 10:14:17 by aorynbay          #+#    #+#             */
-/*   Updated: 2024/07/23 17:10:19 by aorynbay         ###   ########.fr       */
+/*   Updated: 2024/07/23 17:44:29 by aorynbay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static char	*ft_strdup(const char *s1)
 	return (result);
 }
 
-static char	*ft_strdup_nl(const char *s1)
+static char	*ft_strdup_nnl(const char *s1)
 {
 	char	*result;
 	size_t	i;
@@ -64,7 +64,7 @@ static void	update_buf(char **buf)
 		i++;
 	if ((*buf)[i] == '\n')
 		i++;
-	temp = ft_strdup_nl(*buf + i);
+	temp = ft_strdup_nnl(*buf + i);
 	if (temp == NULL)
 	{
 		free(*buf);

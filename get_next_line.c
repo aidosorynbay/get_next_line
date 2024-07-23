@@ -6,7 +6,7 @@
 /*   By: aorynbay <@student.42abudhabi.ae>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 10:14:17 by aorynbay          #+#    #+#             */
-/*   Updated: 2024/07/20 17:12:30 by aorynbay         ###   ########.fr       */
+/*   Updated: 2024/07/23 17:10:19 by aorynbay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,8 @@ char	*get_next_line(int fd)
 	char			*result;
 	static char		*buf;
 
-	if (fd < 0 || BUFFER_SIZE < 1 || BUFFER_SIZE > 2147483646)
+	if (fd < 0 || fd > 1024 || BUFFER_SIZE < 1
+		|| BUFFER_SIZE > 2147483646)
 		return (NULL);
 	if (!buf)
 		buf = ft_strdup("");

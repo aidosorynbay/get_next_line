@@ -6,7 +6,7 @@
 /*   By: aorynbay <@student.42abudhabi.ae>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 10:14:52 by aorynbay          #+#    #+#             */
-/*   Updated: 2024/07/23 17:32:13 by aorynbay         ###   ########.fr       */
+/*   Updated: 2024/07/24 18:02:09 by aorynbay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1000U
+#  define BUFFER_SIZE 1000
 # endif
 
 # include <fcntl.h>

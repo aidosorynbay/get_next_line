@@ -6,7 +6,7 @@
 /*   By: aorynbay <@student.42abudhabi.ae>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 10:14:17 by aorynbay          #+#    #+#             */
-/*   Updated: 2024/07/23 17:44:29 by aorynbay         ###   ########.fr       */
+/*   Updated: 2024/07/24 20:24:38 by aorynbay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,47 +75,51 @@ static void	update_buf(char **buf)
 	*buf = temp;
 }
 
-static void	reader(int fd, char **buf)
+static void	reader(int fd, char **buf, char **temp_buf)
 {
 	ssize_t	buf_count;
-	char	temp_buf[BUFFER_SIZE + 1];
 	char	*new_buf;
 
 	while (!ft_strchr(*buf, '\n'))
 	{
-		buf_count = read(fd, temp_buf, BUFFER_SIZE);
+		buf_count = read(fd, *temp_buf, BUFFER_SIZE);
 		if (buf_count < 1)
 		{
-			if (buf_count == (-1))
+			if (buf_count == -1)
 			{
 				if (*buf != NULL)
 					free(*buf);
 				*buf = NULL;
 			}
-			return ;
+			return (free(*temp_buf), (void)0);
 		}
-		temp_buf[buf_count] = '\0';
-		new_buf = ft_strjoin(*buf, temp_buf);
+		(*temp_buf)[buf_count] = '\0';
+		new_buf = ft_strjoin(*buf, *temp_buf);
 		if (new_buf == NULL)
-			return (free(*buf), *buf = NULL, (void)0);
+			return (free(*temp_buf), free(*buf), *buf = NULL, (void)0);
 		free(*buf);
 		*buf = new_buf;
 	}
+	free(*temp_buf);
 }
 
 char	*get_next_line(int fd)
 {
 	char			*result;
 	static char		*buf;
+	char			*temp_buf;
 
-	if (fd < 0 || fd > 1024 || BUFFER_SIZE < 1
-		|| BUFFER_SIZE > 2147483646)
+	if (fd < 0 || fd > 1024 || BUFFER_SIZE > 2147483646
+		|| BUFFER_SIZE < 1)
 		return (NULL);
 	if (!buf)
 		buf = ft_strdup("");
 	if (buf == NULL)
 		return (free(buf), buf = NULL, NULL);
-	reader(fd, &buf);
+	temp_buf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (temp_buf == NULL)
+		return (free(buf), buf = NULL, NULL);
+	reader(fd, &buf, &temp_buf);
 	if (buf == NULL || buf[0] == '\0')
 	{
 		if (buf && buf[0] == '\0')
@@ -125,24 +129,21 @@ char	*get_next_line(int fd)
 	result = ft_strdup(buf);
 	if (result == NULL)
 		return (free(buf), buf = NULL, NULL);
-	update_buf(&buf);
-	return (result);
+	return (update_buf(&buf), result);
 }
 
-// int	main(void)
-// {
-// 	int fd = open("test.txt", O_RDONLY);
-// 	char *line = get_next_line(fd);
-// 	int i = 5;
-// 	while (line && i > 0)
-// 	{
-// 		printf("|%s|\n", line);
-// 		free(line);
-// 		line = get_next_line(fd);
-// 		i--;
-// 	}
-// 	free(line);
-// 	// printf("|%s|\n", line);
-// 	close(fd);
-// 	return 0;
-// }
+int	main(void)
+{
+	int fd = open("test.txt", O_RDONLY);
+	char *line = get_next_line(fd);
+	while (line)
+	{
+		printf("|%s|\n", line);
+		free(line);
+		line = get_next_line(fd);
+	}
+	free(line);
+	// printf("|%s|\n", line);
+	close(fd);
+	return 0;
+}

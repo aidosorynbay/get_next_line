@@ -6,7 +6,7 @@
 /*   By: aorynbay <@student.42abudhabi.ae>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 10:14:17 by aorynbay          #+#    #+#             */
-/*   Updated: 2024/07/23 17:48:45 by aorynbay         ###   ########.fr       */
+/*   Updated: 2024/07/24 20:19:58 by aorynbay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,15 +75,14 @@ static void	update_buf(char **buf)
 	(*buf) = temp;
 }
 
-static void	reader(int fd, char **buf)
+static void	reader(int fd, char **buf, char **temp_buf)
 {
 	ssize_t	buf_count;
-	char	temp_buf[BUFFER_SIZE + 1];
 	char	*new_buf;
 
 	while (!ft_strchr(buf[fd], '\n'))
 	{
-		buf_count = read(fd, temp_buf, BUFFER_SIZE);
+		buf_count = read(fd, *temp_buf, BUFFER_SIZE);
 		if (buf_count < 1)
 		{
 			if (buf_count == (-1))
@@ -92,21 +91,24 @@ static void	reader(int fd, char **buf)
 					free(buf[fd]);
 				buf[fd] = NULL;
 			}
+			free(*temp_buf);
 			return ;
 		}
-		temp_buf[buf_count] = '\0';
-		new_buf = ft_strjoin(buf[fd], temp_buf);
+		(*temp_buf)[buf_count] = '\0';
+		new_buf = ft_strjoin(buf[fd], *temp_buf);
 		if (new_buf == NULL)
-			return (free(buf[fd]), buf[fd] = NULL, (void)0);
+			return (free(*temp_buf), free(buf[fd]), buf[fd] = NULL, (void)0);
 		free(buf[fd]);
 		buf[fd] = new_buf;
 	}
+	free(*temp_buf);
 }
 
 char	*get_next_line(int fd)
 {
 	char			*result;
 	static char		*buf[1025];
+	char			*temp_buf;
 
 	if (fd < 0 || fd > 1024 || BUFFER_SIZE < 1
 		|| BUFFER_SIZE > 2147483646)
@@ -115,7 +117,10 @@ char	*get_next_line(int fd)
 		buf[fd] = ft_strdup("");
 	if (buf[fd] == NULL)
 		return (free(buf[fd]), buf[fd] = NULL, NULL);
-	reader(fd, buf);
+	temp_buf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (temp_buf == NULL)
+		return (free(buf[fd]), buf[fd] = NULL, NULL);
+	reader(fd, buf, &temp_buf);
 	if (buf[fd] == NULL || buf[fd][0] == '\0')
 	{
 		if (buf[fd] && buf[fd][0] == '\0')
@@ -125,8 +130,7 @@ char	*get_next_line(int fd)
 	result = ft_strdup(buf[fd]);
 	if (result == NULL)
 		return (free(buf[fd]), buf[fd] = NULL, NULL);
-	update_buf(&buf[fd]);
-	return (result);
+	return (update_buf(&buf[fd]), result);
 }
 
 // int	main(void)

@@ -6,7 +6,7 @@
 /*   By: aorynbay <@student.42abudhabi.ae>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 10:14:17 by aorynbay          #+#    #+#             */
-/*   Updated: 2024/07/24 20:24:38 by aorynbay         ###   ########.fr       */
+/*   Updated: 2024/07/24 20:28:38 by aorynbay         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,18 +132,18 @@ char	*get_next_line(int fd)
 	return (update_buf(&buf), result);
 }
 
-int	main(void)
-{
-	int fd = open("test.txt", O_RDONLY);
-	char *line = get_next_line(fd);
-	while (line)
-	{
-		printf("|%s|\n", line);
-		free(line);
-		line = get_next_line(fd);
-	}
-	free(line);
-	// printf("|%s|\n", line);
-	close(fd);
-	return 0;
-}
+// int	main(void)
+// {
+// 	int fd = open("test.txt", O_RDONLY);
+// 	char *line = get_next_line(fd);
+// 	while (line)
+// 	{
+// 		printf("|%s|\n", line);
+// 		free(line);
+// 		line = get_next_line(fd);
+// 	}
+// 	free(line);
+// 	// printf("|%s|\n", line);
+// 	close(fd);
+// 	return 0;
+// }
